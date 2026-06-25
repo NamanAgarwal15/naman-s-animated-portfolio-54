@@ -13,6 +13,7 @@ import About from "./pages/About";
 import Work from "./pages/Work";
 import Contact from "./pages/Contact";
 import Guestbook from "./pages/Guestbook";
+import Stats from "./pages/Stats";
 import { Toaster } from "@/components/ui/sonner";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
@@ -34,6 +35,7 @@ function AnimatedRoutes() {
           <Route path="/work" element={<Work />} />
           <Route path="/guestbook" element={<Guestbook />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/stats" element={<Stats />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
