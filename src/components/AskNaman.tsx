@@ -14,12 +14,22 @@ const STARTERS = [
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ask-naman`;
 const ANON = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
+function getSessionId() {
+  try {
+    let s = sessionStorage.getItem("an_sid");
+    if (!s) { s = crypto.randomUUID(); sessionStorage.setItem("an_sid", s); }
+    return s;
+  } catch { return "anon"; }
+}
+
 export default function AskNaman() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const sessionIdRef = useRef<string>(typeof window !== "undefined" ? getSessionId() : "anon");
+
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
