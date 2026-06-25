@@ -23,14 +23,17 @@ export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const update = (k: keyof typeof form, v: string) => {
+    if (submitted || submitting) return;
     setForm((f) => ({ ...f, [k]: v }));
     if (errors[k]) setErrors((e) => ({ ...e, [k]: "" }));
   };
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitted || submitting) return;
     const result = contactSchema.safeParse(form);
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
@@ -46,10 +49,16 @@ export default function Contact() {
     const mailto = `mailto:naman.agarwal.23cse@bmu.edu.in?subject=${encodeURIComponent(subject)}&body=${body}`;
     window.location.href = mailto;
     setTimeout(() => {
-      toast.success("Opening your email client…");
+      toast.success("Message sent!", {
+        description: "Your email client has been opened. Thanks for reaching out — I'll reply soon.",
+      });
+      setForm({ name: "", email: "", subject: "", message: "" });
+      setErrors({});
       setSubmitting(false);
+      setSubmitted(true);
     }, 400);
   };
+
 
   const inputClass =
     "w-full bg-transparent border-b border-[#475569]/30 py-3 text-base font-light text-[#1A1A1A] placeholder:text-[#475569]/60 focus:outline-none focus:border-[#1A1A1A] transition-colors";
@@ -66,7 +75,8 @@ export default function Contact() {
       </Reveal>
 
       <Reveal delay={0.1}>
-        <form onSubmit={onSubmit} className="mt-14 space-y-8" noValidate>
+        <form onSubmit={onSubmit} className="mt-14" noValidate>
+          <fieldset disabled={submitting || submitted} className="space-y-8 disabled:opacity-60 transition-opacity">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <div>
               <label htmlFor="name" className="block text-xs uppercase tracking-widest font-light text-[#475569] mb-2">
@@ -138,15 +148,30 @@ export default function Contact() {
               <p className="text-xs font-light text-[#475569]/70">{form.message.length}/1000</p>
             </div>
           </div>
+          </fieldset>
+
+
 
           <button
             type="submit"
-            disabled={submitting}
-            className="group inline-flex items-center gap-2 border border-[#1A1A1A] px-6 py-3 text-sm font-medium hover:bg-[#1A1A1A] hover:text-[#F7F5F2] transition-colors duration-300 disabled:opacity-50"
+            disabled={submitting || submitted}
+            className="group inline-flex items-center gap-2 border border-[#1A1A1A] px-6 py-3 text-sm font-medium hover:bg-[#1A1A1A] hover:text-[#F7F5F2] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#1A1A1A]"
           >
-            {submitting ? "Sending…" : "Send Message"}
-            <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            {submitted ? "Message Sent ✓" : submitting ? "Sending…" : "Send Message"}
+            {!submitted && (
+              <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            )}
           </button>
+
+          {submitted && (
+            <button
+              type="button"
+              onClick={() => setSubmitted(false)}
+              className="ml-4 text-xs uppercase tracking-widest font-light text-[#475569] hover:text-[#1A1A1A] transition-colors"
+            >
+              Send another
+            </button>
+          )}
         </form>
       </Reveal>
 
