@@ -33,7 +33,7 @@ export default function Contact() {
     if (errors[k]) setErrors((e) => ({ ...e, [k]: "" }));
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitted || submitting) return;
     const result = contactSchema.safeParse(form);
@@ -46,19 +46,21 @@ export default function Contact() {
       return;
     }
     setSubmitting(true);
-    const { name, email, subject, message } = result.data;
-    const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
-    const mailto = `mailto:naman.agarwal.23cse@bmu.edu.in?subject=${encodeURIComponent(subject)}&body=${body}`;
-    window.location.href = mailto;
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.functions.invoke("send-contact", { body: result.data });
+      if (error) throw error;
       toast.success("Message sent!", {
-        description: "Your email client has been opened. Thanks for reaching out — I'll reply soon.",
+        description: "Thanks for reaching out — I'll reply soon.",
       });
       setForm({ name: "", email: "", subject: "", message: "" });
       setErrors({});
-      setSubmitting(false);
       setSubmitted(true);
-    }, 400);
+    } catch (err: any) {
+      const msg = err?.context?.body ? (await err.context.json?.().catch(() => ({})))?.error : null;
+      toast.error(msg || "Couldn't send — please try again or email me directly.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
 
