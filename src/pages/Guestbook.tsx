@@ -23,10 +23,20 @@ const schema = z.object({
 const RL_KEY = "gb_last_post_at";
 const RL_MS = 60_000;
 
+function makeCaptcha() {
+  const a = Math.floor(Math.random() * 9) + 1;
+  const b = Math.floor(Math.random() * 9) + 1;
+  return { a, b, answer: a + b };
+}
+
 export default function Guestbook() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [form, setForm] = useState({ display_name: "", email: "", message: "" });
   const [posting, setPosting] = useState(false);
+  const [captcha, setCaptcha] = useState(makeCaptcha);
+  const [captchaInput, setCaptchaInput] = useState("");
+  const [hp, setHp] = useState(""); // honeypot
+  const [mountedAt] = useState(() => Date.now());
 
   async function load() {
     const { data, error } = await supabase
@@ -50,6 +60,20 @@ export default function Guestbook() {
 
   async function post(e: React.FormEvent) {
     e.preventDefault();
+    // Honeypot: bots fill hidden fields
+    if (hp) return;
+    // Time trap: submissions under 2s are almost certainly bots
+    if (Date.now() - mountedAt < 2000) {
+      toast.error("Whoa, slow down.");
+      return;
+    }
+    // Math CAPTCHA
+    if (Number(captchaInput) !== captcha.answer) {
+      toast.error("Captcha incorrect — try again.");
+      setCaptcha(makeCaptcha());
+      setCaptchaInput("");
+      return;
+    }
     const last = Number(localStorage.getItem(RL_KEY) || 0);
     if (Date.now() - last < RL_MS) {
       toast.error("Slow down — wait a minute between notes.");
@@ -71,10 +95,14 @@ export default function Guestbook() {
     setPosting(false);
     if (error) {
       toast.error("Couldn't post — try again");
+      setCaptcha(makeCaptcha());
+      setCaptchaInput("");
       return;
     }
     localStorage.setItem(RL_KEY, String(Date.now()));
     setForm({ display_name: "", email: "", message: "" });
+    setCaptcha(makeCaptcha());
+    setCaptchaInput("");
     toast.success("Signed!");
     load();
   }
@@ -133,6 +161,48 @@ export default function Guestbook() {
               className="mt-1 w-full bg-transparent border-b border-[#475569]/30 py-2 text-sm font-light focus:outline-none focus:border-[#1A1A1A] resize-none"
             />
           </div>
+
+          {/* Honeypot — hidden from humans, catnip for bots */}
+          <div aria-hidden="true" className="absolute -left-[9999px] opacity-0 pointer-events-none">
+            <label>
+              Website
+              <input
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={hp}
+                onChange={(e) => setHp(e.target.value)}
+              />
+            </label>
+          </div>
+
+          {/* Math CAPTCHA */}
+          <div>
+            <label className="text-xs uppercase tracking-widest font-light text-[#475569]">
+              Quick check — what's {captcha.a} + {captcha.b}?
+            </label>
+            <div className="flex items-center gap-3">
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={captchaInput}
+                onChange={(e) => setCaptchaInput(e.target.value)}
+                maxLength={3}
+                required
+                placeholder="Answer"
+                className="mt-1 w-32 bg-transparent border-b border-[#475569]/30 py-2 text-sm font-light focus:outline-none focus:border-[#1A1A1A]"
+              />
+              <button
+                type="button"
+                onClick={() => { setCaptcha(makeCaptcha()); setCaptchaInput(""); }}
+                className="mt-1 text-[10px] uppercase tracking-widest text-[#475569] hover:text-[#1A1A1A] transition-colors"
+              >
+                ↻ New
+              </button>
+            </div>
+          </div>
+
 
           <div className="flex items-center justify-between">
             <span className="text-xs font-light text-[#475569]">{form.message.length}/140</span>
