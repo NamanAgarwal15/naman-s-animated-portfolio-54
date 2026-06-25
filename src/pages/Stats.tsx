@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 type Summary = {
   days: number;
-  totals: { views: number; sessions: number; messages: number; guestbook: number };
+  totals: { views: number; sessions: number; messages: number; guestbook: number; chats: number; chatSessions: number };
   topPaths: { path: string; count: number }[];
   topReferrers: { ref: string; count: number }[];
   daily: { day: string; views: number; sessions: number }[];
@@ -13,6 +13,8 @@ type Summary = {
   recentViews: { path: string; referrer: string | null; session_id: string; created_at: string; user_agent: string | null }[];
   messages: { id: string; name: string; email: string; subject: string; message: string; created_at: string }[];
   guestbook: { id: string; display_name: string; email: string | null; message: string; created_at: string; hidden: boolean }[];
+  chats: { id: string; session_id: string | null; prompt: string; response: string | null; message_count: number; referrer: string | null; user_agent: string | null; created_at: string }[];
+  chatStats: { avgPromptLen: number; avgResponseLen: number };
 };
 
 const PASS_KEY = "stats_passcode";
