@@ -75,7 +75,8 @@ export default function Contact() {
       </Reveal>
 
       <Reveal delay={0.1}>
-        <form onSubmit={onSubmit} className="mt-14 space-y-8" noValidate>
+        <form onSubmit={onSubmit} className="mt-14" noValidate>
+          <fieldset disabled={submitting || submitted} className="space-y-8 disabled:opacity-60 transition-opacity">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <div>
               <label htmlFor="name" className="block text-xs uppercase tracking-widest font-light text-[#475569] mb-2">
@@ -147,6 +148,9 @@ export default function Contact() {
               <p className="text-xs font-light text-[#475569]/70">{form.message.length}/1000</p>
             </div>
           </div>
+          </fieldset>
+
+
 
           <button
             type="submit"
