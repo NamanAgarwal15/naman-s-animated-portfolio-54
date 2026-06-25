@@ -49,28 +49,31 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           display_name: string
+          email: string | null
           hidden: boolean
           id: string
           message: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
           display_name: string
+          email?: string | null
           hidden?: boolean
           id?: string
           message: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
           display_name?: string
+          email?: string | null
           hidden?: boolean
           id?: string
           message?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -124,7 +127,36 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      guestbook_public: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          display_name: string | null
+          hidden: boolean | null
+          id: string | null
+          message: string | null
+          user_id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          hidden?: boolean | null
+          id?: string | null
+          message?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          hidden?: boolean | null
+          id?: string | null
+          message?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
