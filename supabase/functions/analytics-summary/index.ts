@@ -75,6 +75,15 @@ Deno.serve(async (req) => {
     .map(([day, v]) => ({ day, views: v.views, sessions: v.sessions.size }))
     .sort((a, b) => a.day.localeCompare(b.day));
 
+  const chatRows = chats.data || [];
+  const chatSessions = new Set(chatRows.map((c) => c.session_id).filter(Boolean)).size;
+  const avgPromptLen = chatRows.length
+    ? Math.round(chatRows.reduce((s, c) => s + (c.prompt?.length || 0), 0) / chatRows.length)
+    : 0;
+  const avgResponseLen = chatRows.length
+    ? Math.round(chatRows.reduce((s, c) => s + (c.response?.length || 0), 0) / chatRows.length)
+    : 0;
+
   return new Response(
     JSON.stringify({
       days,
@@ -83,6 +92,8 @@ Deno.serve(async (req) => {
         sessions,
         messages: msgs.data?.length || 0,
         guestbook: guests.data?.length || 0,
+        chats: chatRows.length,
+        chatSessions,
       },
       topPaths: Object.entries(byPath).map(([path, count]) => ({ path, count })).sort((a, b) => b.count - a.count).slice(0, 12),
       topReferrers: Object.entries(byRef).map(([ref, count]) => ({ ref, count })).sort((a, b) => b.count - a.count).slice(0, 12),
@@ -93,6 +104,8 @@ Deno.serve(async (req) => {
       recentViews: rows.slice(0, 50),
       messages: msgs.data || [],
       guestbook: guests.data || [],
+      chats: chatRows,
+      chatStats: { avgPromptLen, avgResponseLen },
     }),
     { headers: { ...corsHeaders, "Content-Type": "application/json" } },
   );
