@@ -262,6 +262,43 @@ export default function Stats() {
         </ul>
       </div>
 
+      {/* Chatbot logs */}
+      <div className="mt-10">
+        <div className="flex items-baseline justify-between gap-4 flex-wrap">
+          <h3 className="text-xs uppercase tracking-widest font-light text-[#475569]">
+            Ask Naman — chats ({data.chats.length})
+          </h3>
+          <div className="text-[10px] uppercase tracking-widest text-[#475569]">
+            avg prompt {data.chatStats.avgPromptLen} chars · avg reply {data.chatStats.avgResponseLen} chars
+          </div>
+        </div>
+        <ul className="mt-4 space-y-3">
+          {data.chats.length === 0 && <li className="text-sm font-light text-[#475569]">No chats yet.</li>}
+          {data.chats.map((c) => (
+            <li key={c.id} className="border border-[#1A1A1A]/15 p-4">
+              <div className="flex justify-between items-start gap-4">
+                <div className="text-[10px] uppercase tracking-widest font-light text-[#475569]">
+                  session {c.session_id ? c.session_id.slice(0, 8) : "—"} · turn {c.message_count}
+                  {c.referrer && <span> · {c.referrer}</span>}
+                </div>
+                <span className="text-[10px] uppercase tracking-widest font-light text-[#475569] whitespace-nowrap">{new Date(c.created_at).toLocaleString()}</span>
+              </div>
+              <div className="mt-2">
+                <div className="text-[10px] uppercase tracking-widest text-[#475569]">Prompt</div>
+                <p className="text-sm font-light whitespace-pre-wrap mt-1">{c.prompt}</p>
+              </div>
+              {c.response && (
+                <div className="mt-3">
+                  <div className="text-[10px] uppercase tracking-widest text-[#475569]">Reply</div>
+                  <p className="text-sm font-light whitespace-pre-wrap mt-1 text-[#475569]">{c.response}</p>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+
       {/* Guestbook */}
       <div className="mt-10">
         <h3 className="text-xs uppercase tracking-widest font-light text-[#475569]">Guestbook entries ({data.guestbook.length})</h3>
