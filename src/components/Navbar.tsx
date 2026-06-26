@@ -54,7 +54,7 @@ export default function Navbar() {
             className="fixed inset-0 z-50 bg-[#F5F2EA] flex flex-col"
           >
             <div className="flex justify-end p-6">
-              <button onClick={() => setOpen(false)} aria-label="Close menu">
+              <button onClick={() => setOpen(false)} aria-label="Close menu" className="min-w-[44px] min-h-[44px] flex items-center justify-center">
                 <X size={24} />
               </button>
             </div>
