@@ -95,7 +95,7 @@ export default function Companion() {
   if (dismissed) return null;
 
   return (
-    <div className="fixed bottom-6 left-6 z-40 flex items-end gap-2 pointer-events-none">
+    <div className="fixed bottom-6 left-4 sm:left-6 z-40 flex items-end gap-2 pointer-events-none max-w-[calc(100vw-5rem)]">
       <motion.button
         onClick={() => setOpen((o) => !o)}
         whileHover={{ scale: 1.08, rotate: -4 }}
