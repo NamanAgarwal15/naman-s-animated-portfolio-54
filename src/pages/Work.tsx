@@ -121,7 +121,7 @@ export default function Work() {
   const [demoOpen, setDemoOpen] = useState(false);
 
   return (
-    <section className="max-w-4xl mx-auto px-6 py-20">
+    <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
       <SEO title="Work" description="Internships and projects by Naman Agarwal — data analytics, IoT, machine learning, and full-stack work." path="/#/work" />
       <Reveal>
         <h2 className="text-3xl sm:text-4xl font-light tracking-tight">Work</h2>
@@ -196,7 +196,7 @@ export default function Work() {
                 <button
                   type="button"
                   onClick={() => setDemoOpen(true)}
-                  className="mt-5 inline-block nav-link text-sm font-light"
+                  className="mt-5 inline-flex items-center nav-link text-sm font-light min-h-[44px]"
                 >
                   Demo →
                 </button>

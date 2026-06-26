@@ -68,7 +68,7 @@ export default function Contact() {
     "w-full bg-transparent border-b border-[#1A1A1A]/20 py-3 text-base font-light text-[#1A1A1A] placeholder:text-[#888888] focus:outline-none focus:border-[#1A1A1A] transition-colors";
 
   return (
-    <section className="max-w-3xl mx-auto px-6 py-20">
+    <section className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
       <SEO title="Contact" description="Get in touch with Naman Agarwal — open for internships, collaborations, and interesting problems." path="/#/contact" />
       <Reveal>
         <h2 className="text-4xl sm:text-5xl font-light tracking-tight">Let's Connect</h2>
@@ -160,7 +160,7 @@ export default function Contact() {
           <button
             type="submit"
             disabled={submitting || submitted}
-            className="group inline-flex items-center gap-2 border border-[#1A1A1A] px-6 py-3 text-sm font-medium hover:bg-[#1A1A1A] hover:text-[#F5F2EA] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#1A1A1A]"
+            className="mt-8 group inline-flex items-center justify-center gap-2 border border-[#1A1A1A] px-6 py-3 text-sm font-medium hover:bg-[#1A1A1A] hover:text-[#F5F2EA] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#1A1A1A] w-full sm:w-auto min-h-[44px]"
           >
             {submitted ? "Message Sent ✓" : submitting ? "Sending…" : "Send Message"}
             {!submitted && (
@@ -199,14 +199,14 @@ export default function Contact() {
               href={r.href}
               target={r.href.startsWith("http") ? "_blank" : undefined}
               rel="noreferrer"
-              className="arrow-row flex items-center justify-between py-5 group"
+              className="arrow-row flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-3 py-4 sm:py-5 group min-h-[44px]"
             >
-              <span className="text-xs uppercase tracking-widest font-light text-[#666666]">
+              <span className="text-xs uppercase tracking-widest font-light text-[#666666] shrink-0">
                 {r.label}
               </span>
-              <span className="flex items-center gap-3">
-                <span className="font-light text-[#1A1A1A]">{r.value}</span>
-                <ArrowUpRight size={16} className="arrow text-[#666666]" />
+              <span className="flex items-center gap-3 min-w-0 max-w-full">
+                <span className="font-light text-[#1A1A1A] truncate min-w-0">{r.value}</span>
+                <ArrowUpRight size={16} className="arrow text-[#666666] shrink-0" />
               </span>
             </a>
           </motion.li>

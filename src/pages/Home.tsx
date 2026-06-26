@@ -13,12 +13,12 @@ const STATS = [
 
 export default function Home() {
   return (
-    <section className="max-w-5xl mx-auto px-6 min-h-[calc(100vh-5rem)] flex flex-col justify-center">
+    <section className="max-w-5xl mx-auto px-4 sm:px-6 min-h-[calc(100vh-5rem)] flex flex-col justify-center py-10 sm:py-0">
       <SEO title="Home" description="Naman Agarwal — Computer Science & AI undergraduate at BML Munjal University. Internships, projects, and an AI assistant." path="/" />
       <div style={{ fontFamily: "'Courier New', Courier, monospace", fontSize: "13px", color: "#D97706", opacity: 0.8 }} className="mb-4">
         // cs undergrad · data science & ai · builder
       </div>
-      <h1 className="text-5xl sm:text-7xl md:text-8xl font-light tracking-tight leading-[1.05]">
+      <h1 className="text-[clamp(2.5rem,8vw,5rem)] sm:text-7xl md:text-8xl font-light tracking-tight leading-[1.05] break-words">
         {name.split("").map((c, i) => (
           <motion.span
             key={i}
@@ -57,7 +57,7 @@ export default function Home() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: name.length * 0.03 + 0.5, duration: 0.5 }}
-        className="mt-10 flex items-center gap-6 flex-wrap"
+        className="mt-10 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 sm:flex-wrap"
       >
         <Link
           to="/work"
@@ -93,11 +93,11 @@ export default function Home() {
         className="mt-20 mb-24"
       >
         <div className="h-px bg-[#1A1A1A]/15 w-full" />
-        <div className="mt-10 grid grid-cols-3 gap-6">
+        <div className="mt-10 grid grid-cols-3 gap-3 sm:gap-6">
           {STATS.map((s) => {
             const inner = (
               <>
-                <div className="text-3xl sm:text-5xl font-light tracking-tight text-[#1A1A1A]">
+                <div className="text-2xl sm:text-5xl font-light tracking-tight text-[#1A1A1A]">
                   <Counter to={s.value} decimals={s.decimals} />
                 </div>
                 <div className="mt-2 text-xs uppercase tracking-widest text-[#888888] font-light">
