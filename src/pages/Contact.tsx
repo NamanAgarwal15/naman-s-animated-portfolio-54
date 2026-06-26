@@ -160,7 +160,7 @@ export default function Contact() {
           <button
             type="submit"
             disabled={submitting || submitted}
-            className="group inline-flex items-center gap-2 border border-[#1A1A1A] px-6 py-3 text-sm font-medium hover:bg-[#1A1A1A] hover:text-[#F5F2EA] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#1A1A1A]"
+            className="mt-8 group inline-flex items-center justify-center gap-2 border border-[#1A1A1A] px-6 py-3 text-sm font-medium hover:bg-[#1A1A1A] hover:text-[#F5F2EA] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#1A1A1A] w-full sm:w-auto min-h-[44px]"
           >
             {submitted ? "Message Sent ✓" : submitting ? "Sending…" : "Send Message"}
             {!submitted && (
