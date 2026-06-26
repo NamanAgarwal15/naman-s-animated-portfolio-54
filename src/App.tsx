@@ -64,6 +64,7 @@ export default function App() {
 
   return (
     <HashRouter>
+      <GlassBackground />
       <ScrollProgress />
       <Cursor />
       <KonamiEgg />
