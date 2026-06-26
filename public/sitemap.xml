@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>/</loc></url>
-  <url><loc>/#/about</loc></url>
-  <url><loc>/#/work</loc></url>
-  <url><loc>/#/contact</loc></url>
-  <url><loc>/#/guestbook</loc></url>
+  <url><loc>https://namanagarwal15.github.io/naman-s-animated-portfolio-54/</loc><priority>1.0</priority></url>
+  <url><loc>https://namanagarwal15.github.io/naman-s-animated-portfolio-54/#/about</loc><priority>0.8</priority></url>
+  <url><loc>https://namanagarwal15.github.io/naman-s-animated-portfolio-54/#/work</loc><priority>0.9</priority></url>
+  <url><loc>https://namanagarwal15.github.io/naman-s-animated-portfolio-54/#/contact</loc><priority>0.7</priority></url>
 </urlset>

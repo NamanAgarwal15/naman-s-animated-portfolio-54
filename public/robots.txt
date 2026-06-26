@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://namanagarwal15.github.io/naman-s-animated-portfolio-54/sitemap.xml
