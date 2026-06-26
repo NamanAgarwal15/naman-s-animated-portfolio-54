@@ -15,6 +15,9 @@ export default function Home() {
   return (
     <section className="max-w-5xl mx-auto px-6 min-h-[calc(100vh-5rem)] flex flex-col justify-center">
       <SEO title="Home" description="Naman Agarwal — Computer Science & AI undergraduate at BML Munjal University. Internships, projects, and an AI assistant." path="/" />
+      <div style={{ fontFamily: "'Courier New', Courier, monospace", fontSize: "13px", color: "#D97706", opacity: 0.8 }} className="mb-4">
+        // cs undergrad · data science & ai · builder
+      </div>
       <h1 className="text-5xl sm:text-7xl md:text-8xl font-light tracking-tight leading-[1.05]">
         {name.split("").map((c, i) => (
           <motion.span

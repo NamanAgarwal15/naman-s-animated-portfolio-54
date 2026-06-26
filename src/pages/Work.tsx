@@ -110,7 +110,7 @@ const projects = [
 
 function Card({ children, companion }: { children: React.ReactNode; companion?: string }) {
   return (
-    <div data-companion={companion} className="border border-[#D97706]/25 p-6 sm:p-8 bg-white/40 transition-all duration-[250ms] ease-out hover:-translate-y-1 hover:shadow-[0_12px_30px_-12px_rgba(71,85,105,0.25)]">
+    <div data-companion={companion} className="border border-[#D97706]/25 p-6 sm:p-8 bg-white transition-all duration-[250ms] ease-out hover:-translate-y-1 hover:shadow-[0_12px_30px_-12px_rgba(217,119,6,0.25)]">
       {children}
     </div>
   );
@@ -177,6 +177,7 @@ export default function Work() {
                     <span
                       key={t}
                       className="border border-[#D97706]/60 rounded-full px-3 py-1 text-xs font-light"
+                      style={{ fontFamily: "'Courier New', Courier, monospace" }}
                     >
                       {t}
                     </span>
