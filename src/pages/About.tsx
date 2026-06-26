@@ -31,8 +31,7 @@ const education = [
 ];
 
 const achievements = [
-  "Second Place, TechSparx.I Showcase (BMU) — 80+ teams — Smart Wildfire-Fighting Robot",
-  "First Runner-Up, TechSparx.I Showcase (BMU) — 80+ teams — DriveSafe-IND",
+  "First Runner-Up, TechSparx.I Showcase (BMU) — 80+ teams — Smart Wildfire-Fighting Robot",
   "Co-Chair, Innovation Vertical, Young Indians BMU — Aug 2024 to Aug 2025",
   "Foundations of Project Management — Google, Coursera, May 2026",
 ];
@@ -57,7 +56,7 @@ export default function About() {
 
       <div className="mt-20">
         <Reveal>
-          <h3 className="text-xs uppercase tracking-widest text-[#666666] font-medium">Skills</h3>
+          <h3 className="text-sm uppercase tracking-widest text-[#1A1A1A] font-semibold">Skills</h3>
         </Reveal>
         <div className="mt-8 space-y-8">
           {Object.entries(skills).map(([group, { items, quip }]) => (
@@ -94,7 +93,7 @@ export default function About() {
 
       <div className="mt-20">
         <Reveal>
-          <h3 className="text-xs uppercase tracking-widest text-[#666666] font-medium">
+          <h3 className="text-sm uppercase tracking-widest text-[#1A1A1A] font-semibold">
             Education
           </h3>
         </Reveal>
@@ -112,7 +111,7 @@ export default function About() {
 
       <div className="mt-20">
         <Reveal>
-          <h3 className="text-xs uppercase tracking-widest text-[#666666] font-medium">
+          <h3 className="text-sm uppercase tracking-widest text-[#1A1A1A] font-semibold">
             Achievements
           </h3>
         </Reveal>
