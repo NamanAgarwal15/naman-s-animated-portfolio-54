@@ -95,7 +95,7 @@ export default function Companion() {
   if (dismissed) return null;
 
   return (
-    <div className="fixed bottom-6 left-4 sm:left-6 z-40 flex items-end gap-2 pointer-events-none max-w-[calc(100vw-5rem)]">
+    <div className="fixed bottom-20 sm:bottom-6 left-4 sm:left-6 z-40 flex flex-col-reverse sm:flex-row items-start sm:items-end gap-2 pointer-events-none max-w-[calc(100vw-5rem)]">
       <motion.button
         onClick={() => setOpen((o) => !o)}
         whileHover={{ scale: 1.08, rotate: -4 }}
@@ -116,7 +116,7 @@ export default function Companion() {
             animate={{ opacity: 1, x: 0, y: 0 }}
             exit={{ opacity: 0, x: -8 }}
             transition={{ duration: 0.3 }}
-            className="pointer-events-auto relative mb-1 max-w-[85vw] sm:max-w-[280px] bg-white border border-[#1A1A1A]/15 px-3 py-2 text-xs font-light text-[#1A1A1A] shadow-md"
+            className="pointer-events-auto relative mb-1 max-w-[220px] sm:max-w-[280px] bg-white border border-[#1A1A1A]/15 px-3 py-2 text-xs font-light text-[#1A1A1A] shadow-md"
           >
             <button
               onClick={() => setDismissed(true)}

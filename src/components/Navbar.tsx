@@ -51,7 +51,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-50 bg-[#F5F2EA] flex flex-col"
+            className="fixed top-0 left-0 w-screen h-[100dvh] z-[999] bg-[#F5F2EA] flex flex-col"
           >
             <div className="flex justify-end p-6">
               <button onClick={() => setOpen(false)} aria-label="Close menu" className="min-w-[44px] min-h-[44px] flex items-center justify-center">
