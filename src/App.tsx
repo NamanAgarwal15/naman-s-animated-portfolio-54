@@ -9,6 +9,7 @@ import ScrollProgress from "./components/ScrollProgress";
 import AskNaman from "./components/AskNaman";
 import KonamiEgg from "./components/KonamiEgg";
 import Companion from "./components/Companion";
+import GlassBackground from "./components/GlassBackground";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Work from "./pages/Work";
