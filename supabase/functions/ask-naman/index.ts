@@ -1,38 +1,80 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { SYSTEM_PROMPT } from "./knowledge.ts";
 
 const logger = createClient(
   Deno.env.get("SUPABASE_URL")!,
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
 );
 
+// In-memory rate limiter (per edge instance). Good enough for portfolio traffic.
+const RL_WINDOW_MS = 10 * 60 * 1000; // 10 min
+const RL_MAX = 8;
+const rl = new Map<string, number[]>();
 
-const SYSTEM_PROMPT = `You are "Ask Naman", a friendly AI assistant embedded on Naman Agarwal's personal portfolio website. You answer questions visitors (often recruiters) ask about Naman.
+function rateLimited(sid: string): boolean {
+  const now = Date.now();
+  const arr = (rl.get(sid) || []).filter((t) => now - t < RL_WINDOW_MS);
+  if (arr.length >= RL_MAX) {
+    rl.set(sid, arr);
+    return true;
+  }
+  arr.push(now);
+  rl.set(sid, arr);
+  return false;
+}
 
-About Naman Agarwal:
-- Computer Science undergraduate at BML Munjal University, expected graduation 2027.
-- Focused on Data Science & AI. CGPA: 7.93.
-- 4 internships across early-stage startups, working on data, ML, and full-stack problems.
-- 4 notable projects spanning AI applications, data pipelines, and web apps.
-- Strong in: Python, JavaScript/TypeScript, React, SQL, machine learning fundamentals, data analysis (pandas/numpy), and prompt engineering.
-- Based in India. Reachable at naman.agarwal.23cse@bmu.edu.in. LinkedIn: linkedin.com/in/namanagarwal159. GitHub: github.com/NamanAgarwal15.
-- Open to internships, collaborations, and interesting problems.
-
-Style rules:
-- Be concise, warm, professional. Use short paragraphs and the occasional bullet list.
-- Speak in third person about Naman ("Naman has built…") unless directly asked to roleplay.
-- If you genuinely don't know an answer, say so and suggest the visitor email Naman or check his resume/LinkedIn.
-- Never invent facts beyond what's listed above. No salary, no contact info beyond what's listed.
-- Keep replies under ~150 words unless asked for detail.`;
+async function logCall(opts: {
+  sessionId: string | null;
+  prompt: string;
+  response: string;
+  count: number;
+  ua: string | null;
+  referrer: string | null;
+  error?: string | null;
+}) {
+  try {
+    await logger.from("chatbot_logs").insert({
+      session_id: opts.sessionId,
+      prompt: opts.prompt.slice(0, 4000),
+      response: opts.response.slice(0, 8000),
+      message_count: opts.count,
+      user_agent: opts.ua,
+      referrer: opts.referrer,
+      error: opts.error || null,
+    });
+  } catch (e) {
+    console.error("log failed", e);
+  }
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
+  const ua = req.headers.get("user-agent");
+  const referrer = req.headers.get("referer");
+
   try {
     const { messages, sessionId } = await req.json();
+    const sid = typeof sessionId === "string" ? sessionId : "anon";
+
     if (!Array.isArray(messages) || messages.length === 0) {
       return new Response(JSON.stringify({ error: "messages required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const lastUser = [...messages].reverse().find((m: any) => m?.role === "user")?.content || "";
+    if (typeof lastUser !== "string" || lastUser.length > 1000) {
+      return new Response(JSON.stringify({ error: "Your message is too long — keep it under 1000 characters." }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (rateLimited(sid)) {
+      await logCall({ sessionId: sid, prompt: lastUser, response: "", count: messages.length, ua, referrer, error: "rate_limited" });
+      return new Response(JSON.stringify({ error: "Slow down — you've hit the chat limit. Try again in a few minutes." }), {
+        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -47,8 +89,6 @@ Deno.serve(async (req) => {
       .filter((m: any) => m && typeof m.content === "string" && (m.role === "user" || m.role === "assistant"))
       .slice(-12)
       .map((m: any) => ({ role: m.role, content: m.content.slice(0, 2000) }));
-
-    const lastUserPrompt = [...trimmed].reverse().find((m: any) => m.role === "user")?.content || "";
 
     const upstream = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -71,12 +111,12 @@ Deno.serve(async (req) => {
         upstream.status === 429 ? "Too many requests — try again in a minute."
         : upstream.status === 402 ? "AI credits exhausted — Naman needs to top up."
         : "AI is unavailable right now.";
+      await logCall({ sessionId: sid, prompt: lastUser, response: "", count: trimmed.length, ua, referrer, error: `gateway_${upstream.status}` });
       return new Response(JSON.stringify({ error: userMsg }), {
         status: upstream.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Tee the stream: one branch goes to the client, the other accumulates for logging.
     const [clientStream, logStream] = upstream.body!.tee();
 
     (async () => {
@@ -92,9 +132,9 @@ Deno.serve(async (req) => {
           const lines = buffer.split("\n");
           buffer = lines.pop() || "";
           for (const line of lines) {
-            const trimmedLine = line.trim();
-            if (!trimmedLine.startsWith("data:")) continue;
-            const payload = trimmedLine.slice(5).trim();
+            const t = line.trim();
+            if (!t.startsWith("data:")) continue;
+            const payload = t.slice(5).trim();
             if (!payload || payload === "[DONE]") continue;
             try {
               const json = JSON.parse(payload);
@@ -103,16 +143,9 @@ Deno.serve(async (req) => {
             } catch { /* skip */ }
           }
         }
-        await logger.from("chatbot_logs").insert({
-          session_id: sessionId || null,
-          prompt: lastUserPrompt.slice(0, 4000),
-          response: assembled.slice(0, 8000),
-          message_count: trimmed.length,
-          user_agent: req.headers.get("user-agent"),
-          referrer: req.headers.get("referer"),
-        });
+        await logCall({ sessionId: sid, prompt: lastUser, response: assembled, count: trimmed.length, ua, referrer });
       } catch (e) {
-        console.error("log failed", e);
+        console.error("log stream failed", e);
       }
     })();
 
@@ -130,4 +163,3 @@ Deno.serve(async (req) => {
     });
   }
 });
-

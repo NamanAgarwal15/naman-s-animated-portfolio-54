@@ -17,6 +17,7 @@ export type Database = {
       chatbot_logs: {
         Row: {
           created_at: string
+          error: string | null
           id: string
           message_count: number
           prompt: string
@@ -27,6 +28,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          error?: string | null
           id?: string
           message_count?: number
           prompt: string
@@ -37,6 +39,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          error?: string | null
           id?: string
           message_count?: number
           prompt?: string

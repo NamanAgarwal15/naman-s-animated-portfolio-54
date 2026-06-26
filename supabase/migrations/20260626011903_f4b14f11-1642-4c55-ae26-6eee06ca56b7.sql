@@ -1,0 +1,1 @@
+ALTER TABLE public.chatbot_logs ADD COLUMN IF NOT EXISTS error text;
