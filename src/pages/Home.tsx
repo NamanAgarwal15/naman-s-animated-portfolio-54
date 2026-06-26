@@ -34,7 +34,7 @@ export default function Home() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: name.length * 0.03 + 0.1, duration: 0.5 }}
-        className="mt-6 text-lg sm:text-xl font-light text-[#475569]"
+        className="mt-6 text-lg sm:text-xl font-light text-[#D97706]"
       >
         Data Science & AI · BML Munjal University '27
       </motion.p>
@@ -57,7 +57,7 @@ export default function Home() {
       >
         <Link
           to="/work"
-          className="border border-[#1A1A1A] px-6 py-3 text-sm font-medium hover:bg-[#1A1A1A] hover:text-[#F7F5F2] transition-colors duration-300"
+          className="border border-[#1A1A1A] px-6 py-3 text-sm font-medium hover:bg-[#1A1A1A] hover:text-[#F5F2EA] transition-colors duration-300"
         >
           View My Work
         </Link>
@@ -79,14 +79,14 @@ export default function Home() {
         transition={{ delay: name.length * 0.03 + 0.7, duration: 0.5 }}
         className="mt-20 mb-24"
       >
-        <div className="h-px bg-[#475569]/20 w-full" />
+        <div className="h-px bg-[#D97706]/20 w-full" />
         <div className="mt-10 grid grid-cols-3 gap-6">
           {STATS.map((s) => (
             <div key={s.label} data-companion={s.quip}>
               <div className="text-3xl sm:text-5xl font-light tracking-tight">
                 <Counter to={s.value} decimals={s.decimals} />
               </div>
-              <div className="mt-2 text-xs uppercase tracking-widest text-[#475569] font-light">
+              <div className="mt-2 text-xs uppercase tracking-widest text-[#D97706] font-light">
                 {s.label}
               </div>
             </div>
