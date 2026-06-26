@@ -80,7 +80,7 @@ export default function Contact() {
       </Reveal>
 
       <Reveal delay={0.1}>
-        <form onSubmit={onSubmit} className="mt-14" noValidate>
+        <form onSubmit={onSubmit} className="mt-14 glass-card rounded-3xl p-6 sm:p-10" noValidate>
           <fieldset disabled={submitting || submitted} className="space-y-8 disabled:opacity-60 transition-opacity">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <div>
